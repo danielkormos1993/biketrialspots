@@ -1,0 +1,101 @@
+<% include ./partials/header %>
+
+<!-- <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4">Welcome to BikeTrial Spots</h1>
+        <p class="lead">A place where riders can find a trial spot for their taste.</p>
+    </div>
+</div> -->
+
+<div class="container">
+    
+    <div id="map" class="mt-3"></div>
+    
+    <!-- modal -->
+    
+    <div class="modal fade" id="spot-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Spot adatai</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    
+                        <img class="card-img-top" id="spot-modal-image">
+                        <div class="card-body">
+                            <h5 class="card-title" id="spot-modal-title"></h5>
+                            <p class="card-text"><i class="fas fa-map-marker-alt"></i><span id="spot-modal-location-address"></span></p>
+                            <a class="btn btn-primary" id="spot-modal-href" href="">Tovább a spotra...</a>
+                        </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <h1 class="mt-3">SPOTS</h1>
+
+    <div class="row">
+    
+        <% spots.forEach( function(spot){ %>
+                
+                <div class="col-sm-4 mt-3 mb-3">
+                <div class="card h-100">
+                    <img class="card-img-top" src="<%= spot.image %>">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= spot.title %></h5>
+                        <p class="card-text"><i class="fas fa-map-marker-alt"></i> <%= spot.location.address %></p>
+                        <a class="btn btn-primary" href="/<%= spot._id %>">Read more</a>
+                    </div>
+                </div>
+                </div>
+            
+        <% }); %>
+    
+    </div>
+
+</div>
+
+<!-- GOOGLE MAPS -->
+<script type="text/javascript">
+    
+    var spots = <%- JSON.stringify(spots) %>;
+
+    function initMap() {
+      // The location of Uluru
+      var hungary = {lat: 47.162494, lng: 19.503304};
+      // The map, centered at Uluru
+      var map = new google.maps.Map(
+          document.getElementById('map'), {
+                zoom: 7,
+                center: hungary,
+                mapTypeControl: false,
+                streetViewControl: false,
+                fullscreenControl: false
+          });
+      
+        for (i = 0; i < spots.length; i++) {  
+            marker = new google.maps.Marker({
+                position: new google.maps.LatLng(spots[i].location.lat, spots[i].location.lng),
+                map: map,
+                icon: "bts-marker.png"
+            });
+            
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                return function() {
+                    $('#spot-modal-image').attr("src", spots[i].image);
+                    $('#spot-modal-title').html(spots[i].title);
+                    $('#spot-modal-location-address').html(" " + spots[i].location.address);
+                    $('#spot-modal-href').attr("href", "/" + spots[i]._id);
+                    $('#spot-modal').modal('show');
+                }
+              })(marker, i));
+        }    
+    }
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYDUgmIB7ZbjZ7Tls5qry_Z4kbKKbEF9k&callback=initMap" type="text/javascript"></script>
+
+<% include ./partials/footer %>

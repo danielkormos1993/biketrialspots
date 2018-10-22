@@ -1,0 +1,29 @@
+<% include ./partials/header %>
+
+<div class="container">
+    
+    <div class="row">
+        
+        <div class="col-md-4 mt-5">
+            <h4><%= spot.title %></h4>
+            <p><i class="fas fa-map-marker-alt"></i> <%= spot.location.address %></p>
+            <% if(spot.contact){ %>
+                <strong>Contact</strong>
+                <p><%= spot.contact %></p>
+            <% } %>    
+        </div>
+        
+        <div class="col-md-8 mt-5">
+            <div class="card">
+                <img class="img-fluid card-img-top" src="<%= spot.image %>">
+                <div class="card-body">
+                    <p class="card-text"><%= spot.description %></p>
+                 </div>
+            </div>
+        </div>
+        
+    </div>
+    
+</div>
+
+<% include ./partials/footer %>

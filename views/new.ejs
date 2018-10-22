@@ -1,0 +1,95 @@
+<% include ./partials/header %>
+
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4">Új spot</h1>
+    </div>
+</div>
+
+<div class="container">
+    
+    <form action="/" method="POST">
+        <div class="form-group">
+            <label for="title"><strong>Spot neve</strong></label>
+            <input required type="text" class="form-control" id="title" placeholder="Szentbékkálai kőtenger..." name="spot[title]">
+        </div>
+        <div class="form-group">
+            <label for="places-autocomplete"><strong>Cím</strong></label>
+            <input required type="text" class="form-control" placeholder="Szentbékkála..." name="spot[location][address]" id="places-autocomplete">
+            <input hidden required type="text" name="spot[location][lat]" id="location-lat">
+            <input hidden required type="text" name="spot[location][lng]" id="location-lng">
+        </div>
+        <div class="form-group">
+            <label for="upload-button"><strong>Kép</strong></label>
+            <a class="btn btn-primary" id="upload-button" onClick="client.picker(options).open()">Kép feltöltése/link</a>
+            <input hidden required type="text" name="spot[image]" id="image">
+            <img hidden id="uploaded-image" class="image-thumbnail d-block">
+        </div>
+        <div class="form-group">
+            <label for="description"><strong>Leírás</strong></label>
+            <textarea required class="form-control" id="description" name="spot[description]"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="contact">Kontakt - opcionális</label>
+            <input type="text" class="form-control" id="contact" placeholder="Név, telefonszám, email..." name="spot[contact]">
+        </div>
+        <button type="submit" class="btn btn-primary">Spot létrehozása</button>
+    </form>
+    
+</div>
+
+<script>
+     
+    var autocomplete;
+    var componentForm = {
+        street_number: 'short_name',
+        route: 'long_name',
+        locality: 'long_name',
+        administrative_area_level_1: 'short_name',
+        country: 'long_name',
+        postal_code: 'short_name'
+    };
+
+    function initAutocomplete() {
+        autocomplete = new google.maps.places.Autocomplete(
+            (document.getElementById('places-autocomplete')),
+            {types: ['geocode']});
+            
+            autocomplete.setFields(['formatted_address', 'geometry']);
+            autocomplete.addListener('place_changed', fillInAddress);
+    }
+
+    function fillInAddress() {
+  
+        var place = autocomplete.getPlace();
+
+        document.getElementById('location-lat').value = place.geometry.location.lat();
+        document.getElementById('location-lng').value = place.geometry.location.lng();
+
+    }
+
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYDUgmIB7ZbjZ7Tls5qry_Z4kbKKbEF9k&libraries=places&language=hu&region=HU&callback=initAutocomplete" type="text/javascript"></script>
+<script src="//static.filestackapi.com/filestack-js/1.x.x/filestack.min.js"></script>
+<script type="text/javascript">
+    const client = filestack.init('APsSEGy4TSv6NmmoUYtPyz');
+    const options = {
+        uploadInBackground: false,
+        "fromSources": [
+            "local_file_system",
+            "url",
+            "facebook",
+            "instagram"
+        ],
+        accept: 'image/*',
+        onUploadDone: function(result){
+            var uploadButton = document.getElementById("upload-button");
+            uploadButton.parentNode.removeChild(uploadButton);
+            document.getElementById("image").value = result.filesUploaded[0].url;
+            document.getElementById("uploaded-image").setAttribute('src', result.filesUploaded[0].url);
+            document.getElementById("uploaded-image").removeAttribute("hidden");
+        }
+    };
+</script>
+
+<% include ./partials/footer %>

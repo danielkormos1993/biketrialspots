@@ -1,0 +1,14 @@
+#map{
+    width:100%;
+    height:500px;
+}
+
+#upload-button{
+    color:#fff;
+    display:block;
+    max-width:300px;
+}
+
+#uploaded-image{
+    max-width:200px;
+}
