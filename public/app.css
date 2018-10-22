@@ -4,11 +4,71 @@
 }
 
 #upload-button{
-    color:#fff;
     display:block;
     max-width:300px;
+    color:#17a2b8;
 }
 
 #uploaded-image{
     max-width:200px;
 }
+
+.spot-card .card-img-top{
+    min-height:200px;
+    max-height:200px;
+    overflow-y:hidden;
+}
+
+.spot-card .card-img-top img{
+    width:100%;
+}
+
+/*======================
+  SPOT PAGE
+  ======================*/
+  
+.spot-map-container{
+    overflow:hidden;
+    padding-bottom:56.25%;
+    position:relative;
+    height:0;
+}
+#spot-map{
+    left:0;
+    top:0;
+    height:100%;
+    width:100%;
+    position:absolute;
+}  
+
+/*======================
+  GLOBAL
+  ======================*/
+
+.jumbotron {
+    background-image: url("jumbo-bg-compressed.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
+.caption-on-jumbo{
+    color:#90f0ff;
+    border-color:#90f0ff;
+}
+
+/*======================
+  MARKER MODAL
+  ======================*/
+  
+.modal-body{
+    padding-left:0;
+    padding-right:0;
+    padding-top:0;
+}
+
+.modal-body h4{
+    margin-bottom:0;
+}
+

@@ -1,29 +1,61 @@
 <% include ./partials/header %>
 
 <div class="container">
+        
+    <div class="jumbotron text-center text-white mb-3">
+        <h3 class="text-uppercase"><%= spot.title %></h3>
+        <p class="caption-on-jumbo"><i class="fas fa-map-marker-alt"></i> <%= spot.location.address %></p>
+    </div>
     
     <div class="row">
         
-        <div class="col-md-4 mt-5">
-            <h4><%= spot.title %></h4>
-            <p><i class="fas fa-map-marker-alt"></i> <%= spot.location.address %></p>
-            <% if(spot.contact){ %>
-                <strong>Contact</strong>
-                <p><%= spot.contact %></p>
-            <% } %>    
+        <div class="col-md-8 mb-3">
+            <img class="img-fluid" src="<%= spot.image %>">
         </div>
         
-        <div class="col-md-8 mt-5">
-            <div class="card">
-                <img class="img-fluid card-img-top" src="<%= spot.image %>">
-                <div class="card-body">
-                    <p class="card-text"><%= spot.description %></p>
-                 </div>
+        <div class="col-md-4 mb-3">
+            <h4 class="border-bottom py-1 text-uppercase">Pályainformáció</h4>
+            <p><%= spot.description %></p>
+        </div> 
+    
+        <div class="col-md-12 mb-3">
+            <h4 class="border-bottom py-1 text-uppercase">Térkép</h4>
+            <div class="spot-map-container">
+                <div id="spot-map"></div>
             </div>
         </div>
         
     </div>
     
 </div>
+
+<script type="text/javascript">
+    
+    var spot = <%- JSON.stringify(spot) %>;
+
+    function initMap() {
+
+        var spotLocation = {lat: Number(spot.location.lat), lng: Number(spot.location.lng)};
+
+        var map = new google.maps.Map(
+            document.getElementById('spot-map'), {
+                zoom: 14,
+                center: spotLocation,
+                mapTypeControl: false,
+                streetViewControl: false,
+                fullscreenControl: false
+            });
+      
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(spot.location.lat, spot.location.lng),
+                map: map,
+                icon: "bts-marker.png"
+            });    
+            
+    }
+    
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYDUgmIB7ZbjZ7Tls5qry_Z4kbKKbEF9k&callback=initMap" type="text/javascript"></script>
 
 <% include ./partials/footer %>

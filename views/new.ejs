@@ -1,14 +1,12 @@
 <% include ./partials/header %>
 
-<div class="jumbotron jumbotron-fluid">
-    <div class="container">
-        <h1 class="display-4">Új spot</h1>
-    </div>
-</div>
-
 <div class="container">
     
-    <form action="/" method="POST">
+    <div class="jumbotron jumbotron-fluid text-center text-white mb-3">
+        <h3 class="text-uppercase">Új spot</h3>
+    </div>
+    
+    <form action="/" method="POST" class="mb-3">
         <div class="form-group">
             <label for="title"><strong>Spot neve</strong></label>
             <input required type="text" class="form-control" id="title" placeholder="Szentbékkálai kőtenger..." name="spot[title]">
@@ -21,7 +19,7 @@
         </div>
         <div class="form-group">
             <label for="upload-button"><strong>Kép</strong></label>
-            <a class="btn btn-primary" id="upload-button" onClick="client.picker(options).open()">Kép feltöltése/link</a>
+            <a class="btn btn-outline-info" id="upload-button" onClick="client.picker(options).open()">Kép feltöltése/link</a>
             <input hidden required type="text" name="spot[image]" id="image">
             <img hidden id="uploaded-image" class="image-thumbnail d-block">
         </div>
@@ -29,11 +27,7 @@
             <label for="description"><strong>Leírás</strong></label>
             <textarea required class="form-control" id="description" name="spot[description]"></textarea>
         </div>
-        <div class="form-group">
-            <label for="contact">Kontakt - opcionális</label>
-            <input type="text" class="form-control" id="contact" placeholder="Név, telefonszám, email..." name="spot[contact]">
-        </div>
-        <button type="submit" class="btn btn-primary">Spot létrehozása</button>
+        <button type="submit" class="btn btn-info">Spot létrehozása</button>
     </form>
     
 </div>
