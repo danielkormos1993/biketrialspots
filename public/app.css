@@ -9,6 +9,10 @@
     color:#17a2b8;
 }
 
+#upload-button:hover{
+    color:#fff;
+}
+
 #uploaded-image{
     max-width:200px;
 }

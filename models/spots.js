@@ -9,7 +9,11 @@ var spotsSchema = new mongoose.Schema({
        lng:Number
    },
    image:String,
-   description:String
+   description:String,
+   author:{
+         type: mongoose.Schema.Types.ObjectId,
+         ref: "users"
+      }
    
 });
 
