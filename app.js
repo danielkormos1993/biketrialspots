@@ -1,8 +1,9 @@
-var express     = require("express"),
-    bodyParser  = require("body-parser"),
-    mongoose    = require("mongoose"),
-    spots       = require("./models/spots"),
-    seedDB      = require("./seedDB");
+var express         = require("express"),
+    mongoose        = require("mongoose"),  
+    bodyParser      = require("body-parser"),
+    methodOverride  = require("method-override"),
+    spots           = require("./models/spots"),
+    seedDB          = require("./seedDB");
     
 mongoose.connect("mongodb://localhost/biketrialspots", { useNewUrlParser: true });
 var app = express();
@@ -14,6 +15,7 @@ var app = express();
 app.set("view engine","ejs");
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(__dirname + "/public"));
+app.use(methodOverride("_method"));
 seedDB();
 
 // ==================================
@@ -50,6 +52,16 @@ app.get("/:id", function(req, res){
             console.log(err);
         } else{
             res.render("spot", {spot: spot});
+        }
+    });
+});
+
+app.delete("/:id", function(req, res){
+    spots.findByIdAndRemove(req.params.id, function(err){
+        if(err){
+            console.log(err);
+        } else{
+            res.redirect("/");
         }
     });
 });
