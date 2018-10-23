@@ -4,6 +4,7 @@ var express             = require("express"),
     methodOverride      = require("method-override"),
     passport            = require("passport"),
     facebookStrategy    = require("passport-facebook").Strategy,
+    flash               = require("connect-flash"),
     users               = require("./models/users"),
     spots               = require("./models/spots"),
     seedDB              = require("./seedDB");
@@ -19,6 +20,7 @@ app.set("view engine","ejs");
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
+app.use(flash());
 // seedDB();
 
 // PASSPORT CONFIG
@@ -34,6 +36,8 @@ app.use(passport.session());
 
 app.use(function(req, res, next){
    res.locals.currentUser = req.user;
+   res.locals.success = req.flash('success');
+   res.locals.error = req.flash('error');
    next();
 });
 
@@ -91,6 +95,7 @@ app.post("/", ensureAuthenticated, function(req, res){
             createdSpot.author.id = req.user._id;
             createdSpot.author.username = req.user.username;
             createdSpot.save();
+            req.flash("success","Sikeresen létrehoztál egy spotot!");
             res.redirect("/");
         }
     });
@@ -99,6 +104,7 @@ app.post("/", ensureAuthenticated, function(req, res){
 app.get("/logout", function(req, res){
 
     req.logout();
+    req.flash("success","Sikeresen kijelentkeztél!");
     res.redirect('back'); 
 
 });
@@ -118,6 +124,7 @@ app.delete("/:id", checkSpotOwnership, function(req, res){
         if(err){
             console.log(err);
         } else{
+            req.flash("error","Spot törölve.");
             res.redirect("/");
         }
     });
@@ -138,19 +145,25 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook',
 
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) { return next(); }
+    req.flash("error","Bejelentkezés szükséges!");
     return res.redirect('back');
 }
 
 function checkSpotOwnership(req, res, next){
     if(req.isAuthenticated()){
         spots.findById(req.params.id, function(err, spot){
+            if(err){
+                console.log(err);
+            }
            if(spot.author.id.equals(req.user._id)){
                next();
            } else {
+               req.flash("error","Nem rendelkezel a szükséges privilégiókkal.");
                res.redirect("/" + req.params.id);
            }
         });
     } else {
+        req.flash("error","Bejelentkezés szükséges!");
         res.redirect("/");
     }
 }
