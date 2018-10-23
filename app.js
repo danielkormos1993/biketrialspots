@@ -1,7 +1,8 @@
 var express     = require("express"),
     bodyParser  = require("body-parser"),
     mongoose    = require("mongoose"),
-    spots       = require("./models/spots.js");
+    spots       = require("./models/spots"),
+    seedDB      = require("./seedDB");
     
 mongoose.connect("mongodb://localhost/biketrialspots", { useNewUrlParser: true });
 var app = express();
@@ -13,6 +14,7 @@ var app = express();
 app.set("view engine","ejs");
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(__dirname + "/public"));
+seedDB();
 
 // ==================================
 // ROUTES
