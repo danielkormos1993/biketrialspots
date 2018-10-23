@@ -10,7 +10,7 @@ var express             = require("express"),
     seedDB              = require("./seedDB");
     
 // mongoose.connect("mongodb://localhost/biketrialspots", { useNewUrlParser: true });
-mongoose.connect("mongodb://biketrialspots-admin:biketrialspots1@ds239873.mlab.com:39873/biketrialspots-prod");
+mongoose.connect("mongodb://bts:password1@ds239873.mlab.com:39873/biketrialspots-prod");
 var app = express();
 
 // ==================================
