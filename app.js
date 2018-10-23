@@ -19,7 +19,7 @@ app.set("view engine","ejs");
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
-seedDB();
+// seedDB();
 
 // PASSPORT CONFIG
 
@@ -83,11 +83,14 @@ app.get("/new", ensureAuthenticated, function(req, res){
     res.render("new");
 });
 
-app.post("/", function(req, res){
-    spots.create(req.body.spot, function(err, result){
+app.post("/", ensureAuthenticated, function(req, res){
+    spots.create(req.body.spot, function(err, createdSpot){
         if(err){
             console.log(err)
         } else{
+            createdSpot.author.id = req.user._id;
+            createdSpot.author.username = req.user.username;
+            createdSpot.save();
             res.redirect("/");
         }
     });
@@ -110,7 +113,7 @@ app.get("/:id", function(req, res){
     });
 });
 
-app.delete("/:id", ensureAuthenticated, function(req, res){
+app.delete("/:id", checkSpotOwnership, function(req, res){
     spots.findByIdAndRemove(req.params.id, function(err){
         if(err){
             console.log(err);
@@ -119,6 +122,8 @@ app.delete("/:id", ensureAuthenticated, function(req, res){
         }
     });
 });
+
+// FB AUTH ROUTES
 
 app.get('/auth/facebook', passport.authenticate('facebook'));
 
@@ -134,6 +139,20 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook',
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) { return next(); }
     return res.redirect('back');
+}
+
+function checkSpotOwnership(req, res, next){
+    if(req.isAuthenticated()){
+        spots.findById(req.params.id, function(err, spot){
+           if(spot.author.id.equals(req.user._id)){
+               next();
+           } else {
+               res.redirect("/" + req.params.id);
+           }
+        });
+    } else {
+        res.redirect("/");
+    }
 }
 
 // ==================================
