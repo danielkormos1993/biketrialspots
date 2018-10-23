@@ -4,7 +4,8 @@
   "description": "A place, where users can find trial spots for their taste.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"node app.js"
   },
   "author": "Daniel Kormos",
   "license": "ISC",
