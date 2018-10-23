@@ -43,10 +43,12 @@ app.use(function(req, res, next){
    next();
 });
 
+
+
 passport.use(new facebookStrategy({
     clientID: "1103233456502553",
     clientSecret: "61586964d1b69eeaaa5d4cb808c6fdc3",
-    callbackURL: "https://84dde739bf2b434f9b6bd73b471f35f4.vfs.cloud9.us-east-2.amazonaws.com/auth/facebook/callback",
+    callbackURL: process.env.FBCALLBACK,
     profileFields: ['id', 'displayName', 'picture.type(large)']
 }, function(accessToken, refreshToken, profile, done) {
 
