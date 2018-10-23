@@ -1,27 +1,22 @@
 var express     = require("express"),
     bodyParser  = require("body-parser"),
-    mongoose    = require("mongoose");
+    mongoose    = require("mongoose"),
+    spots       = require("./models/spots.js");
     
 mongoose.connect("mongodb://localhost/biketrialspots", { useNewUrlParser: true });
-
-var spotsSchema = new mongoose.Schema({
-   title:String,
-   location:{
-       address:String,
-       lat:String,
-       lng:String
-   },
-   image:String,
-   description:String,
-   contact:String
-});
-
-var spots = mongoose.model("spots", spotsSchema);
-    
 var app = express();
+
+// ==================================
+// APP CONFIGURATION
+// ==================================
+
 app.set("view engine","ejs");
 app.use(bodyParser.urlencoded({extended:true}));
-app.use(express.static('public'));
+app.use(express.static(__dirname + "/public"));
+
+// ==================================
+// ROUTES
+// ==================================
 
 app.get("/", function(req, res){
     spots.find({}, function(err, spots){
@@ -57,6 +52,10 @@ app.get("/:id", function(req, res){
     });
 });
 
+// ==================================
+// APP LISTEN
+// ==================================
+
 app.listen(process.env.PORT, process.env.IP, function(req, res){
-    console.log("APP HAS STARTED!!!!!");
+    console.log("BikeTrialSpots server has been started...");
 });
