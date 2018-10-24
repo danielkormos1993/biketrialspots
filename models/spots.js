@@ -10,6 +10,7 @@ var spotsSchema = new mongoose.Schema({
    },
    image:String,
    description:String,
+   type: String,
    author:{
       id:{
          type: mongoose.Schema.Types.ObjectId,

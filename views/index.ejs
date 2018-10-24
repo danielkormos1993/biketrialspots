@@ -3,13 +3,13 @@
 <div class="container">
     
     <div class="jumbotron jumbotron-fluid text-center text-white mb-3">
-        <h3 class="text-uppercase">Spot térkép</h3>
-        <a class="btn btn-outline-secondary caption-on-jumbo" href="/new">Spot hozzáadása</a>
+        <h3 class="text-uppercase">Pálya/Spot térkép</h3>
+        <a class="btn btn-outline-secondary caption-on-jumbo" href="/new">Pálya/Spot hozzáadása  <i class="fas fa-plus"></i></a>
     </div>
     
     <div id="map" class="mb-3"></div>
     
-    <h4 class="border-bottom py-1 text-uppercase mb-3">Spotok</h4>
+    <h4 class="border-bottom py-1 text-uppercase mb-3">Összes pálya/spot <small class="text-muted text-lowercase float-right mt-1"><%= spots.length %> db találat</small></h4>
 
     <div class="row">
     
@@ -21,9 +21,9 @@
                             <img src="<%= spot.image %>">
                         </div>    
                         <div class="card-body">
-                            <h5 class="card-title"><%= spot.title %></h5>
+                            <h5 class="card-title"><%= spot.title %><span class="badge float-right mt-1 spot-type text-white"><%= spot.type %></span></h5>
                             <p class="card-text text-info"><i class="fas fa-map-marker-alt"></i> <%= spot.location.address %></p>
-                            <a class="btn btn-outline-info" href="/<%= spot._id %>">Spot információk</a>
+                            <a class="btn btn-outline-info" href="/<%= spot._id %>">Bővebb infó</a>
                         </div>
                     </div>
                 </div>
@@ -40,17 +40,18 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Spot adatai</h5>
+                    <h5 class="modal-title">Pálya/Spot adatai</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body text-center">
                     <img class="card-img-top" id="spot-modal-image">
+                    <span class="badge mx-3 mt-3 spot-type text-white float-right" id="spot-modal-type"></span>
                     <div class="card-body mt-3">
                         <h4 class="text-uppercase" id="spot-modal-title"></h4>
                         <p class="card-text text-info"><i class="fas fa-map-marker-alt"></i><span id="spot-modal-location-address"></span></p>
-                        <a class="btn btn-outline-info" id="spot-modal-href" href="">Tovább a spotra...</a>
+                        <a class="btn btn-outline-info" id="spot-modal-href" href="">Bővebb infó</a>
                     </div>
                 </div>
             </div>
@@ -75,22 +76,44 @@
                 fullscreenControl: false
           });
       
-        for (i = 0; i < spots.length; i++) {  
+        for (i = 0; i < spots.length; i++) { 
+            
+          
+            var markerIcon;
+            if(spots[i].type === "pálya"){
+                markerIcon = "park-marker.png";
+            } else if(spots[i].type === "spot"){
+                markerIcon = "spot-marker.png";
+            }
+            
             marker = new google.maps.Marker({
                 position: new google.maps.LatLng(spots[i].location.lat, spots[i].location.lng),
                 map: map,
-                icon: "bts-marker.png"
+                icon: markerIcon
             });
+            
+          
             
             google.maps.event.addListener(marker, 'click', (function(marker, i) {
                 return function() {
+                      var typeColor;
+                     if(spots[i].type === "pálya"){
+                        typeColor = "badge-success";
+                        
+                    } else if(spots[i].type === "spot"){
+                        typeColor = "badge-warning";
+                        
+                    }
+                    
                     $('#spot-modal-image').attr("src", spots[i].image);
                     $('#spot-modal-title').html(spots[i].title);
                     $('#spot-modal-location-address').html(" " + spots[i].location.address);
+                    $('#spot-modal-type').html(spots[i].type).removeClass("badge-success badge-warning").addClass(typeColor);
                     $('#spot-modal-href').attr("href", "/" + spots[i]._id);
                     $('#spot-modal').modal('show');
                 }
             })(marker, i));
+            
         }    
     }
 </script>

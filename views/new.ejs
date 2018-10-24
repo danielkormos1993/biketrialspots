@@ -3,12 +3,12 @@
 <div class="container">
     
     <div class="jumbotron jumbotron-fluid text-center text-white mb-3">
-        <h3 class="text-uppercase">Új spot</h3>
+        <h3 class="text-uppercase">Új pálya/spot</h3>
     </div>
     
-    <form action="/" method="POST" class="mb-3">
+    <form action="/" method="POST" class="mb-5">
         <div class="form-group">
-            <label for="title"><strong>Spot neve</strong></label>
+            <label for="title"><strong>Pálya/spot neve</strong></label>
             <input required type="text" class="form-control" id="title" placeholder="Szentbékkálai kőtenger..." name="spot[title]">
         </div>
         <div class="form-group">
@@ -22,12 +22,28 @@
             <a class="btn btn-outline-info" id="upload-button" onClick="client.picker(options).open()">Kép feltöltése/link</a>
             <input hidden required type="text" name="spot[image]" id="image">
             <img hidden id="uploaded-image" class="image-thumbnail d-block">
+            <small class="form-text text-muted">
+              Egyenlőre sajnos csak egy kép feltöltésére van lehetőség.
+            </small>
         </div>
         <div class="form-group">
             <label for="description"><strong>Leírás</strong></label>
             <textarea required class="form-control" id="description" name="spot[description]"></textarea>
+            <small class="form-text text-muted">
+              Bármiféle információ a pályáról/spotról pl.: elemek, nehezségi szint, kontakt, megközelítés stb.
+            </small>
         </div>
-        <button type="submit" class="btn btn-info">Spot létrehozása</button>
+        <div class="form-group">
+            <label for="type"><strong>Típus</strong></label>
+            <select required class="form-control" id="type" name="spot[type]">
+                <option value="pálya">pálya</option>
+                <option value="spot">spot</option>
+            </select>
+            <small class="form-text text-muted">
+              Pálya ha -> mesterségesen létrehozott pálya triál célra. Spot ha -> nem triál célra létrehozott "spot" pl. egy fal, sziklák, városban pár lépcső stb...
+            </small>
+        </div>
+        <button type="submit" class="btn btn-info">Létrehozás</button>
     </form>
     
 </div>

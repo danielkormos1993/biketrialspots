@@ -14,7 +14,7 @@
         </div>
         
         <div class="col-md-4 mb-3">
-            <h4 class="border-bottom py-1 text-uppercase">Pályainformáció</h4>
+            <h4 class="border-bottom py-1 text-uppercase">Információ <span class="badge float-right text-lowercase spot-type text-white"><%= spot.type %></span></h4>
             <p><%= spot.description %></p>
             <p class="caption"><em>Létrehozta <%= spot.author.username %></em></p>
             <% if(currentUser && spot.author.id.equals(currentUser._id)){ %>

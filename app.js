@@ -9,9 +9,8 @@ var express             = require("express"),
     spots               = require("./models/spots"),
     seedDB              = require("./seedDB");
     
-// mongoose.connect("mongodb://localhost/biketrialspots", { useNewUrlParser: true });
+mongoose.connect("mongodb://localhost/biketrialspots", { useNewUrlParser: true });
 // mongoose.connect("mongodb://bts:password1@ds239873.mlab.com:39873/biketrialspots-prod");
-mongoose.connect(process.env.DATABASEURL);
 var app = express();
 
 // ==================================
@@ -23,7 +22,10 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
 app.use(flash());
-// seedDB();
+if(process.env.DEVELOPMENT){
+   seedDB(); 
+}
+
 
 // PASSPORT CONFIG
 
@@ -48,7 +50,7 @@ app.use(function(req, res, next){
 passport.use(new facebookStrategy({
     clientID: "1103233456502553",
     clientSecret: "61586964d1b69eeaaa5d4cb808c6fdc3",
-    callbackURL: process.env.FBCALLBACK,
+    callbackURL: "https://84dde739bf2b434f9b6bd73b471f35f4.vfs.cloud9.us-east-2.amazonaws.com/auth/facebook/callback", // process.env.FBCALLBACK
     profileFields: ['id', 'displayName', 'picture.type(large)']
 }, function(accessToken, refreshToken, profile, done) {
 
@@ -109,7 +111,7 @@ app.get("/logout", function(req, res){
 
     req.logout();
     req.flash("success","Sikeresen kijelentkeztél!");
-    res.redirect('back'); 
+    res.redirect("/"); 
 
 });
 
@@ -150,7 +152,7 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook',
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) { return next(); }
     req.flash("error","Bejelentkezés szükséges!");
-    return res.redirect('back');
+    return res.redirect("/");
 }
 
 function checkSpotOwnership(req, res, next){
