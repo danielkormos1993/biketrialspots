@@ -9,8 +9,9 @@ var express             = require("express"),
     spots               = require("./models/spots"),
     seedDB              = require("./seedDB");
     
-mongoose.connect("mongodb://localhost/biketrialspots", { useNewUrlParser: true });
+// mongoose.connect("mongodb://localhost/biketrialspots", { useNewUrlParser: true });
 // mongoose.connect("mongodb://bts:password1@ds239873.mlab.com:39873/biketrialspots-prod");
+mongoose.connect(process.env.DATABASEURL);
 var app = express();
 
 // ==================================
@@ -50,7 +51,8 @@ app.use(function(req, res, next){
 passport.use(new facebookStrategy({
     clientID: "1103233456502553",
     clientSecret: "61586964d1b69eeaaa5d4cb808c6fdc3",
-    callbackURL: "https://84dde739bf2b434f9b6bd73b471f35f4.vfs.cloud9.us-east-2.amazonaws.com/auth/facebook/callback", // process.env.FBCALLBACK
+  //  callbackURL: "https://84dde739bf2b434f9b6bd73b471f35f4.vfs.cloud9.us-east-2.amazonaws.com/auth/facebook/callback",
+    callbackURL: process.env.FBCALLBACK, 
     profileFields: ['id', 'displayName', 'picture.type(large)']
 }, function(accessToken, refreshToken, profile, done) {
 
