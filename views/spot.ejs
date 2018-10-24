@@ -1,12 +1,17 @@
 <% include ./partials/header %>
 
 <div class="container">
-        
-    <div class="jumbotron text-center text-white mb-3">
-        <h3 class="text-uppercase"><%= spot.title %></h3>
-        <p class="caption-on-jumbo"><i class="fas fa-map-marker-alt"></i> <%= spot.location.address %></p>
-    </div>
     
+    <!-- JUMBOTRON COMPONENT -->
+    
+    <div class="jumbotron jumbotron-fluid text-center text-white mb-3">
+        <div class="container">
+            <h4 class="text-uppercase mb-1"><%= spot.title %></h4>
+            <p class="text-info mb-0"><i class="fas fa-map-marker-alt"></i>&nbsp;<%= spot.location.address %></p>
+        </div>
+    </div>
+        
+   
     <div class="row">
         
         <div class="col-md-8 mb-3">
@@ -14,9 +19,9 @@
         </div>
         
         <div class="col-md-4 mb-3">
-            <h4 class="border-bottom py-1 text-uppercase">Információ <span class="badge float-right text-lowercase spot-type text-white"><%= spot.type %></span></h4>
+            <h6 class="border-bottom py-1 text-uppercase">Információ <span class="badge float-right text-lowercase s-type text-white"><%= spot.type %></span></h6>
             <p><%= spot.description %></p>
-            <p class="caption"><em>Létrehozta <%= spot.author.username %></em></p>
+            <p class="caption nice-text"><em>Létrehozta <%= spot.author.username %></em></p>
             <% if(currentUser && spot.author.id.equals(currentUser._id)){ %>
                 <form action="/<%= spot._id %>?_method=DELETE" method="POST">
                     <button type="submit" class="btn btn-danger btn-sm">Spot törlése</button>
@@ -25,7 +30,7 @@
         </div> 
     
         <div class="col-md-12 mb-3">
-            <h4 class="border-bottom py-1 text-uppercase">Térkép</h4>
+            <h6 class="border-bottom py-1 text-uppercase">Térkép</h6>
             <div class="spot-map-container">
                 <div id="spot-map"></div>
             </div>

@@ -2,24 +2,30 @@
 
 <div class="container">
     
-    <div class="jumbotron jumbotron-fluid text-center text-white mb-3">
-        <h3 class="text-uppercase">Új pálya/spot</h3>
-    </div>
+    <!-- JUMBOTRON COMPONENT -->
     
-    <form action="/" method="POST" class="mb-5">
+    <div class="jumbotron jumbotron-fluid text-center text-white mb-3">
+        <div class="container">
+            <h4 class="text-uppercase">Új pálya/spot</h4>
+        </div>
+    </div>
+  
+    <!-- NEW SPOT COMPONENT -->  
+  
+    <form action="/" method="POST" class="mb-5 new-spot-form">
         <div class="form-group">
-            <label for="title"><strong>Pálya/spot neve</strong></label>
+            <label for="title">Pálya/spot neve</label>
             <input required type="text" class="form-control" id="title" placeholder="Szentbékkálai kőtenger..." name="spot[title]">
         </div>
         <div class="form-group">
-            <label for="places-autocomplete"><strong>Cím</strong></label>
+            <label for="places-autocomplete">Cím</label>
             <input required type="text" class="form-control" placeholder="Szentbékkála..." name="spot[location][address]" id="places-autocomplete">
             <input hidden required type="text" name="spot[location][lat]" id="location-lat">
             <input hidden required type="text" name="spot[location][lng]" id="location-lng">
         </div>
         <div class="form-group">
-            <label for="upload-button"><strong>Kép</strong></label>
-            <a class="btn btn-outline-info" id="upload-button" onClick="client.picker(options).open()">Kép feltöltése/link</a>
+            <label for="upload-button">Kép</label>
+            <a class="btn btn-outline-dark" id="upload-button" onClick="client.picker(options).open()" href="#">Kép feltöltése/link</a>
             <input hidden required type="text" name="spot[image]" id="image">
             <img hidden id="uploaded-image" class="image-thumbnail d-block">
             <small class="form-text text-muted">
@@ -27,14 +33,14 @@
             </small>
         </div>
         <div class="form-group">
-            <label for="description"><strong>Leírás</strong></label>
+            <label for="description">Leírás</label>
             <textarea required class="form-control" id="description" name="spot[description]"></textarea>
             <small class="form-text text-muted">
-              Bármiféle információ a pályáról/spotról pl.: elemek, nehezségi szint, kontakt, megközelítés stb.
+              Bármiféle információ a pályáról/spotról. Pl.: elemek, nehezségi szint, kontakt, megközelítés stb.
             </small>
         </div>
         <div class="form-group">
-            <label for="type"><strong>Típus</strong></label>
+            <label for="type">Típus</label>
             <select required class="form-control" id="type" name="spot[type]">
                 <option value="pálya">pálya</option>
                 <option value="spot">spot</option>

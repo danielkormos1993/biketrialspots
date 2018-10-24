@@ -2,83 +2,107 @@
 
 <div class="container">
     
+    <!-- JUMBOTRON COMPONENT -->
+    
     <div class="jumbotron jumbotron-fluid text-center text-white mb-3">
-        <h3 class="text-uppercase">Pálya/Spot térkép</h3>
-        <a class="btn btn-outline-secondary caption-on-jumbo" href="/new">Pálya/Spot hozzáadása  <i class="fas fa-plus"></i></a>
+        <div class="container">
+            <h4 class="text-uppercase">Pálya/Spot térkép</h4>
+            <hr>
+            <a class="btn btn-info" href="/new">Pálya/Spot hozzáadása&nbsp;&nbsp;<i class="fas fa-plus"></i></a>
+        </div>
     </div>
+    
+    <!-- ALL SPOTS MAP COMPONENT -->
     
     <div id="map" class="mb-3"></div>
     
-    <h4 class="border-bottom py-1 text-uppercase mb-3">Összes pálya/spot <small class="text-muted text-lowercase float-right mt-1"><%= spots.length %> db találat</small></h4>
-
-    <div class="row">
+    <!-- ALL SPOTS COMPONENT -->
     
-        <% spots.forEach( function(spot){ %>
-                
-                <div class="col-md-6 mb-3">
-                    <div class="card h-100 spot-card">
-                        <div class="card-img-top">
-                            <img src="<%= spot.image %>">
-                        </div>    
-                        <div class="card-body">
-                            <h5 class="card-title"><%= spot.title %><span class="badge float-right mt-1 spot-type text-white"><%= spot.type %></span></h5>
-                            <p class="card-text text-info"><i class="fas fa-map-marker-alt"></i> <%= spot.location.address %></p>
-                            <a class="btn btn-outline-info" href="/<%= spot._id %>">Bővebb infó</a>
+    <div id="all-spots">
+        <h6 class="border-bottom py-1 text-uppercase mb-3">Összes pálya/spot <small class="text-muted float-right mt-1 nice-text"><%= spots.length %> db találat</small></h5>
+    
+        <input id="search-input" onkeyup="searchSpots()" class="form-control my-3" type="search" placeholder="Keresés..." aria-label="Search">
+    
+        <div class="row">
+        
+            <% spots.forEach( function(spot){ %>
+                    
+                    <div class="col-md-6 mb-3 spot-container" spotid="<%= spot._id %>">
+                        <div class="card h-100">
+                            <div class="card-img-top">
+                                <img src="<%= spot.image %>">
+                            </div>    
+                            <div class="card-body">
+                                <h6 class="card-title"><%= spot.title %><span class="badge float-right s-type text-white"><%= spot.type %></span></h6>
+                                <p class="card-text text-info"><i class="fas fa-map-marker-alt"></i> <%= spot.location.address %></p>
+                                <a class="btn btn-outline-dark" href="/<%= spot._id %>">Bővebb infó</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            
-        <% }); %>
-    
+                
+            <% }); %>
+        
+        </div>
     </div>
 
 </div>
 
-<!-- MARKER MODAL -->
+<!-- MARKER MODAL COMPONENT-->
     
     <div class="modal fade" id="spot-modal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Pálya/Spot adatai</h5>
+                    <h5 class="modal-title nice-text">Pálya/Spot adatai</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body text-center">
-                    <img class="card-img-top" id="spot-modal-image">
-                    <span class="badge mx-3 mt-3 spot-type text-white float-right" id="spot-modal-type"></span>
-                    <div class="card-body mt-3">
-                        <h4 class="text-uppercase" id="spot-modal-title"></h4>
-                        <p class="card-text text-info"><i class="fas fa-map-marker-alt"></i><span id="spot-modal-location-address"></span></p>
-                        <a class="btn btn-outline-info" id="spot-modal-href" href="">Bővebb infó</a>
-                    </div>
+                <div id="modal-inject-there" class="spot-container">
                 </div>
             </div>
         </div>
     </div>
 
-<!-- GOOGLE MAPS -->
+<!-- ALL SPOTS COMPONENTS FUNCTIONS -->
+
+<script type="text/javascript">
+    
+    function searchSpots() {
+        var input, filter, ul, li, a, i;
+        input = document.getElementById('search-input');
+        filter = input.value.toUpperCase();
+        spotContainers = $(".spot-container");
+        for (i = 0; i < spotContainers.length; i++) {
+            if (spotContainers[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                spotContainers[i].style.display = "";
+            } else {
+                spotContainers[i].style.display = "none";
+            }
+        }
+    }
+    
+</script>
+
+<!-- ALL SPOT MAP COMPONENT FUNCTIONS -->
+
 <script type="text/javascript">
     
     var spots = <%- JSON.stringify(spots) %>;
 
     function initMap() {
-      // The location of Uluru
-      var hungary = {lat: 47.162494, lng: 19.503304};
-      // The map, centered at Uluru
-      var map = new google.maps.Map(
-          document.getElementById('map'), {
+        var hungary = {lat: 47.162494, lng: 19.503304};
+        var map = new google.maps.Map(
+            document.getElementById('map'), {
                 zoom: 7,
                 center: hungary,
                 mapTypeControl: false,
                 streetViewControl: false,
                 fullscreenControl: false
-          });
+        });
       
         for (i = 0; i < spots.length; i++) { 
             
-          
             var markerIcon;
             if(spots[i].type === "pálya"){
                 markerIcon = "park-marker.png";
@@ -92,26 +116,13 @@
                 icon: markerIcon
             });
             
-          
-            
             google.maps.event.addListener(marker, 'click', (function(marker, i) {
                 return function() {
-                      var typeColor;
-                     if(spots[i].type === "pálya"){
-                        typeColor = "badge-success";
-                        
-                    } else if(spots[i].type === "spot"){
-                        typeColor = "badge-warning";
-                        
-                    }
-                    
-                    $('#spot-modal-image').attr("src", spots[i].image);
-                    $('#spot-modal-title').html(spots[i].title);
-                    $('#spot-modal-location-address').html(" " + spots[i].location.address);
-                    $('#spot-modal-type').html(spots[i].type).removeClass("badge-success badge-warning").addClass(typeColor);
-                    $('#spot-modal-href').attr("href", "/" + spots[i]._id);
+                    var modalToShow = spots[i]._id;
+                    var clonedElement = $('.spot-container[spotid="' + modalToShow + '"]').html();
+                    $('#modal-inject-there').html(clonedElement);
                     $('#spot-modal').modal('show');
-                }
+                }   
             })(marker, i));
             
         }    

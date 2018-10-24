@@ -6,8 +6,8 @@ var express             = require("express"),
     facebookStrategy    = require("passport-facebook").Strategy,
     flash               = require("connect-flash"),
     users               = require("./models/users"),
-    spots               = require("./models/spots"),
-    seedDB              = require("./seedDB");
+    spots               = require("./models/spots");
+    // seedDB              = require("./seedDB");
     
 // mongoose.connect("mongodb://localhost/biketrialspots", { useNewUrlParser: true });
 // mongoose.connect("mongodb://bts:password1@ds239873.mlab.com:39873/biketrialspots-prod");
@@ -23,10 +23,10 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
 app.use(flash());
-if(process.env.DEVELOPMENT){
-   seedDB(); 
-}
 
+// if(process.env.DEVELOPMENT){
+//   seedDB(); 
+// }
 
 // PASSPORT CONFIG
 
@@ -39,6 +39,8 @@ app.use(require("express-session")({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// LOCAL VARIABLES
+
 app.use(function(req, res, next){
    res.locals.currentUser = req.user;
    res.locals.success = req.flash('success');
@@ -46,7 +48,7 @@ app.use(function(req, res, next){
    next();
 });
 
-
+// FACEBOOK STRATEGY
 
 passport.use(new facebookStrategy({
     clientID: "1103233456502553",
@@ -55,15 +57,10 @@ passport.use(new facebookStrategy({
     callbackURL: process.env.FBCALLBACK, 
     profileFields: ['id', 'displayName', 'picture.type(large)']
 }, function(accessToken, refreshToken, profile, done) {
-
-        users.findOrCreate(profile, function(err, user) {
-
-             if (err) 
-                { return done(err); }
-
-            done(null, user);
-
-        });
+    users.findOrCreate(profile, function(err, user) {
+        if (err) { return done(err); }
+        done(null, user);
+    });
     }
 ));
 
@@ -103,18 +100,16 @@ app.post("/", ensureAuthenticated, function(req, res){
             createdSpot.author.id = req.user._id;
             createdSpot.author.username = req.user.username;
             createdSpot.save();
-            req.flash("success","Sikeresen létrehoztál egy spotot!");
-            res.redirect("/");
+            req.flash("success","Sikeresen létrehoztál egy pályát/spotot");
+            res.redirect("/" + createdSpot._id);
         }
     });
 });
 
 app.get("/logout", function(req, res){
-
     req.logout();
     req.flash("success","Sikeresen kijelentkeztél!");
     res.redirect("/"); 
-
 });
 
 app.get("/:id", function(req, res){
@@ -132,7 +127,7 @@ app.delete("/:id", checkSpotOwnership, function(req, res){
         if(err){
             console.log(err);
         } else{
-            req.flash("error","Spot törölve.");
+            req.flash("error","Pálya/spot törölve.");
             res.redirect("/");
         }
     });
