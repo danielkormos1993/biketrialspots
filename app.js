@@ -23,7 +23,7 @@ app.use(flash());
 
 var FBCALLBACK;
 
-if(process.env.DEVELOPMENT){
+if(process.env.DEVELOPMENT === "true"){
     FBCALLBACK = "https://84dde739bf2b434f9b6bd73b471f35f4.vfs.cloud9.us-east-2.amazonaws.com/auth/facebook/callback";
     var seedDB = require("./seedDB");
     seedDB();
